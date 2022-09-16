@@ -6,9 +6,171 @@
     :root {
         --green: #a4cf5e;
         --blue: #026681;
+        --dark-gray: #999999;
         --light-gray: #c9c9c9;
+        --lighter-gray: #e9e9e9;
         --background: #f3f3f3;
         --borders: #d8d8d8;
+    }
+
+    /* Clearing LO CSS */
+    P,
+    LI,
+    OL,
+    UL,
+    TABLE,
+    TR,
+    TH,
+    TD,
+    .Explicit {
+        font-family: unset;
+        font-size: unset;
+    }
+
+    div.form-row,
+    .mobile div.responsive div.form-row {
+        margin: 4px 0;
+        padding: 0 4px;
+    }
+
+    div.responsive div.form-content {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    div.responsive span.field-required {
+        width: 4px;
+        height: 4px;
+        background-size: 4px;
+    }
+
+    .HelpLink {
+        color: var(--blue) !important;
+        font-weight: 400;
+        text-decoration: none;
+    }
+
+    div.responsive input[type="text"],
+    div.responsive input[type="number"],
+    div.responsive input[type="email"],
+    div.responsive input[type="password"],
+    div.responsive textarea,
+    select,
+    div.responsive select {
+        border: 1px solid var(--borders);
+        border-radius: 4px;
+        box-shadow: none;
+        color: black;
+        display: block;
+        margin-top: 4px;
+        max-width: 100%;
+        width: 100% !important;
+        padding: 8px;
+    }
+
+    div.responsive input[type="text"]:focus-visible,
+    div.responsive input[type="number"]:focus-visible,
+    div.responsive input[type="email"]:focus-visible,
+    div.responsive input[type="password"]:focus-visible,
+    div.responsive textarea:focus-visible,
+    select:focus-visible,
+    div.responsive select:focus-visible {
+        outline-width: 2px;
+        outline-color: var(--green);
+        outline-style: solid;
+        border-color: var(--green);
+    }
+
+    .mobile div.donation-form-container.responsive,
+    .mobile div.html-caption-container {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
+        width: 100%;
+        border: none;
+        background-color: var(--background);
+    }
+
+    .section-header-container {
+        border-top: 1px solid var(--lighter-gray);
+        color: var(--blue);
+        font-size: 28px;
+        padding: 20px 4px;
+    }
+
+    /* Custom checkboxes */
+    div.responsive div.form-checkbox label,
+    label.custom-element-checkbox-label {
+        display: inline;
+        max-width: unset;
+    }
+
+    input[type="checkbox"] {
+        position: absolute;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        width: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+    }
+
+    input[type="checkbox"]+label {
+        position: relative;
+        font-size: 17px;
+        cursor: pointer;
+        display: inline;
+        color: rgb(0, 0, 0);
+    }
+
+    input[type="checkbox"]+label::before {
+        content: " ";
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 8px;
+        width: 17px;
+        height: 17px;
+        background-color: white;
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgb(204, 204, 204);
+        border-radius: 2px;
+        box-shadow: none;
+    }
+
+    input[type="checkbox"]:checked+label::after {
+        content: " ";
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjMDAwMDAwIiBkPSJNMTczLjg5OCA0MzkuNDA0bC0xNjYuNC0xNjYuNGMtOS45OTctOS45OTctOS45OTctMjYuMjA2IDAtMzYuMjA0bDM2LjIwMy0zNi4yMDRjOS45OTctOS45OTggMjYuMjA3LTkuOTk4IDM2LjIwNCAwTDE5MiAzMTIuNjkgNDMyLjA5NSA3Mi41OTZjOS45OTctOS45OTcgMjYuMjA3LTkuOTk3IDM2LjIwNCAwbDM2LjIwMyAzNi4yMDRjOS45OTcgOS45OTcgOS45OTcgMjYuMjA2IDAgMzYuMjA0bC0yOTQuNCAyOTQuNDAxYy05Ljk5OCA5Ljk5Ny0yNi4yMDcgOS45OTctMzYuMjA0LS4wMDF6Ii8+PC9zdmc+);
+        background-repeat: no-repeat;
+        background-size: 10px 10px;
+        background-position: center center;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 0px;
+        left: 1px;
+        top: 4px;
+        text-align: center;
+        background-color: transparent;
+        font-size: 10px;
+        height: 17px;
+        width: 17px;
+    }
+
+    /* Custom selects */
+    select,
+    div.responsive select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml,<svg width='24px' height='24px' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path d='M11.646 15.146L5.854 9.354a.5.5 0 01.353-.854h11.586a.5.5 0 01.353.854l-5.793 5.792a.5.5 0 01-.707 0z' /></svg>");
+        background-repeat: no-repeat;
+        background-position: 99%;
+        background-size: 16px;
+        padding-right: 20px;
+        max-width: 100% !important;
     }
 
     /* Normalize */
@@ -18,28 +180,24 @@
         padding: 0;
         margin: 0;
         font-family: 'Raleway', sans-serif;
+        font-size: 18px;
     }
 
     body {
         background-color: var(--background);
     }
 
-    /* Clearing LO CSS */
-    .mobile div.donation-form-container.responsive {
-        padding: 0;
-        margin: 0;
-        max-width: 100%;
-        width: 100%;
-        border: none;
-        background-color: var(--background);
-    }
-
     /* HELPERS */
-    .native-field.hide {
+    .luminate-field {
         display: none !important;
+        text-transform: capitalize;
+        font-weight: 700;
+        background-color: gray;
+        color: var(--lighter-gray);
+        padding: 0.5em;
     }
 
-    .native-field.show {
+    .luminate-field.debug {
         display: block !important;
     }
 
@@ -51,7 +209,8 @@
     }
 
     header a img {
-        max-width: 220px;
+        max-width: 100%;
+        width: 220px;
     }
 
     /* MAIN */
@@ -60,8 +219,9 @@
     }
 
     .main-container {
-        max-width: 960px;
+        max-width: 1000px;
         margin: 0 auto;
+        padding: 0 20px;
     }
 
     /* HERO */
@@ -69,25 +229,353 @@
         display: flex;
     }
 
+    #hero-image img {
+        width: 100%;
+    }
+
+    #creative-content {
+        margin: 2em 0;
+    }
+
     /* GIFT ARRAY */
+    #gift-array {
+        display: grid;
+        grid-template-columns: 70% 30%;
+    }
+
+    #one-time-array,
+    #monthly-array {
+        justify-content: space-between;
+        flex-wrap: nowrap;
+    }
+
+    .gift-array-button {
+        width: 100%;
+        color: var(--dark-gray);
+        font-size: 24px;
+        font-weight: 700;
+        background-color: var(--background);
+        border: 1px solid var(--borders);
+        border-radius: 4px;
+        text-align: center;
+        padding: 8px 1.5em;
+        margin-right: 0.5em;
+        cursor: pointer;
+    }
+
+    .gift-array-button:hover,
+    .gift-array-button.chosen {
+        color: white;
+        background-color: var(--green);
+    }
+
+    #other-amount {
+        margin: 0;
+        outline: none;
+        color: var(--dark-gray);
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    #gift-amount-message {
+        color: darkred;
+        font-weight: 600;
+        text-align: right;
+        display: block;
+        grid-column-start: 1;
+        grid-column-end: 3;
+        margin-top: 0.5em;
+    }
 
     /* PAYMENT FREQUENCY */
+    .frequency-option {
+        margin-bottom: 1em;
+    }
+
+    input[name="frequency"],
+    input[name="responsive_payment_type.account_type"] {
+        position: relative;
+        top: 4px;
+    }
 
     /* PAYMENT INFO */
+    #payment-types {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 10px;
+    }
+
+    label[for="responsive_payment_typepay_typeradiocredit"],
+    label[for="responsive_payment_typepay_typeradioach"],
+    label[for="responsive_payment_typepay_typeradiopaypal"] {
+        display: block;
+        border-radius: 5px;
+        border: none !important;
+        background: var(--light-gray);
+        padding: 0 20px;
+        cursor: pointer;
+    }
+
+    span.payment-type-option.selected label {
+        background: var(--green);
+    }
+
+    span.payment-type-option input {
+        display: none;
+    }
+
+    #credit span.payment-type-option label img {
+        background: url(../images/content/pagebuilder/cc_inactive.png) no-repeat;
+        background-size: 100% 25px;
+        width: 160px;
+        transition: 0.5s;
+        background-position-x: center;
+        background-position-y: center;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #credit span.payment-type-option.selected label img {
+        background: url(../images/content/pagebuilder/cc_selected.png) no-repeat;
+        background-size: 100% 25px;
+        width: 160px;
+        transition: 0.5s;
+        background-position-x: center;
+        background-position-y: center;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #bank span.payment-type-option label img {
+        background: url(../images/content/pagebuilder/check_inactive.png) no-repeat;
+        background-size: 41px 25px;
+        width: 160px;
+        transition: 0.5s;
+        background-position-x: center;
+        background-position-y: center;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #bank span.payment-type-option.selected label img {
+        background: url(../images/content/pagebuilder/check_selected.png) no-repeat;
+        background-size: 41px 25px;
+        width: 160px;
+        transition: 0.5s;
+        background-position-x: center;
+        background-position-y: center;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #paypal span.payment-type-option label img {
+        background: url(../images/content/pagebuilder/paypal_inactive.png) no-repeat;
+        background-size: 95px 25px;
+        width: 160px;
+        transition: 0.5s;
+        background-position-x: center;
+        background-position-y: center;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #paypal span.payment-type-option.selected label img {
+        background: url(../images/content/pagebuilder/paypal_selected.png) no-repeat;
+        background-size: 95px 25px;
+        width: 160px;
+        transition: 0.5s;
+        background-position-x: center;
+        background-position-y: center;
+        display: block;
+        margin: 0 auto;
+    }
+
+    #payment_cc_container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    #responsive_payment_typecc_number_row {
+        grid-column-start: 1;
+        grid-column-end: 5;
+    }
+
+    #responsive_payment_typecc_exp_date_row {
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+
+    .cardExpGroup {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+
+    #responsive_payment_typecc_exp_date_MONTH {
+        margin-right: 8px;
+    }
+
+    #responsive_payment_typecc_cvv_row {
+        grid-column-start: 3;
+        grid-column-end: 5;
+    }
+
+    ul.radio-array-list li {
+        margin-top: 8px;
+    }
+
+    label[for="is_company_gift_radio"] {
+        color: var(--blue) !important;
+    }
+
+    #company_name_row {
+        display: none;
+    }
 
     /* BILLING INFO */
+    #billing-details {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-gap: 8px;
+    }
+
+    #billing_title_row {
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+
+    #billing_first_name_row {
+        grid-column-start: 3;
+        grid-column-end: 7;
+    }
+
+    #billing_last_name_row {
+        grid-column-start: 7;
+        grid-column-end: 13;
+    }
+
+    #billing_addr_street1_row {
+        grid-column-start: 1;
+        grid-column-end: 13;
+    }
+
+    #billing_addr_city_row {
+        grid-column-start: 1;
+        grid-column-end: 13;
+    }
+
+    #billing_addr_state_row {
+        grid-column-start: 1;
+        grid-column-end: 7;
+    }
+
+    #billing_addr_zip_row {
+        grid-column-start: 7;
+        grid-column-end: 13;
+    }
+
+    #donor_email_address_row {
+        grid-column-start: 1;
+        grid-column-end: 7;
+    }
+
+    #donor_phone_row {
+        grid-column-start: 7;
+        grid-column-end: 13;
+    }
 
     /* TRIBUTE SECTION */
+    #send_ecard_row,
+    #eCards {
+        display: none;
+    }
+
+    #tributeGift {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    #send_ecard_row {
+        grid-column-start: 1;
+        grid-column-end: 4;
+    }
+
+    #eCards {
+        grid-column-start: 1;
+        grid-column-end: 4;
+    }
+
+    .layout-chooser-container.clearfix {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 8px;
+    }
+
+    div.responsive div.layout-choice-thumbnail-container {
+        margin: 0;
+    }
+
+    #eCard-preview {
+        display: block;
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+        background-color: var(--green);
+        border: 1px solid var(--borders);
+        border-radius: 4px;
+        text-align: center;
+        padding: 8px 1.5em;
+        margin: 1em 0;
+        cursor: pointer;
+        max-width: 320px;
+    }
+
+    #donor_employer_row {
+        margin-top: 1em;
+        padding-top: 1em;
+        border-top: 1px solid var(--borders);
+    }
+
+    label[for="donor_employername"] {
+        display: block;
+        margin-bottom: 0.5em;
+        color: var(--blue);
+    }
+
+    /* PROCESS BUTTON */
+    #pstep_finish {
+        background: none;
+        float: none;
+        display: block;
+        color: white;
+        font-size: 24px;
+        font-weight: 700;
+        background-color: var(--green);
+        border: 1px solid var(--borders);
+        border-radius: 4px;
+        text-align: center;
+        padding: 8px 1.5em;
+        margin: 1em 0;
+        cursor: pointer;
+        max-width: 480px;
+    }
+
+    #pstep_finish:disabled {
+        color: var(--dark-gray);
+        background-color: var(--lighter-gray);
+        cursor: not-allowed;
+    }
 
     /* FOOTER */
     footer {
         background-color: white;
-        padding: 2.5em;
+        padding: 2.5em 20px;
         text-align: center;
     }
 
     footer a img {
-        max-width: 220px;
+        max-width: 100%;
+        width: 220px;
     }
 
     footer p,
@@ -123,5 +611,69 @@
 
     #youtube {
         background-position: -118px;
+    }
+</style>
+<!-- Responsive  -->
+<style>
+    @media (max-width: 767px) {
+
+        /* ARRAY */
+        #gift-array {
+            grid-template-columns: 1fr
+        }
+
+        #one-time-array,
+        #monthly-array {
+            flex-direction: column;
+        }
+
+        .gift-array-button {
+            margin-right: 0;
+            margin-bottom: 0.5em;
+        }
+
+        /* PAYMENT */
+        #payment-types {
+            grid-template-columns: 1fr;
+        }
+
+        #responsive_payment_typecc_exp_date_row,
+        #responsive_payment_typecc_cvv_row {
+            grid-column-start: 1;
+            grid-column-end: 5;
+        }
+
+        #billing_title_row,
+        #billing_first_name_row,
+        #billing_last_name_row,
+        #billing_addr_state_row,
+        #billing_addr_zip_row,
+        #donor_email_address_row,
+        #donor_phone_row {
+            grid-column-start: 1;
+            grid-column-end: 13;
+        }
+
+        #tribute_type_row,
+        #tribute_honoree_first_name_row,
+        #tribute_honoree_last_name_row {
+            grid-column-start: 1;
+            grid-column-end: 4;
+        }
+
+        .mobile div.responsive textarea {
+            max-width: 100%;
+        }
+
+        .layout-chooser-container.clearfix {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media(min-width: 768px) and (max-width:980px) {
+        #gift-array {
+            display: grid;
+            grid-template-columns: 80% 20%;
+        }
     }
 </style>

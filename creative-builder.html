@@ -1,0 +1,25 @@
+<!-- This is the creative builder, it is used by multiple forms, be careful when editing -->
+<script>
+    // Set the hero image
+    document.querySelector('#hero-image img').setAttribute('src', window.heroImage)
+
+    // Append the creative content
+    if (document.querySelector('section#creative')) {
+        document.getElementById('creative-content').appendChild(document.querySelector('section#creative'))
+    }
+    
+    // Store creative in session (in case of error)
+    setTimeout(function () {
+        storeInSession('hero', document.querySelector('#hero-image').innerHTML)
+        storeInSession('creative', document.getElementById('creative-content').innerHTML)
+    }, 5000)
+
+    // Render creative from session
+    function renderCreative() {
+        var image = retrieveFromSession('hero')
+        var content = retrieveFromSession('creative')
+
+        document.querySelector('#hero-image').innerHTML = image
+        document.getElementById('creative-content').innerHTML = content
+    }
+</script>

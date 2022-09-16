@@ -1,0 +1,229 @@
+<!-- eCard Thumbnail Optimizer -->
+<script>
+    // Add new eCards here
+    var optimizedThumbnails = [
+        {
+            id: '3441',
+            image: '../images/content/pagebuilder/211215-XCOFB-eCard-Evergreen-Hero-v4-min.jpg',
+        },
+        {
+            id: '3442',
+            image: '../images/content/pagebuilder/211215-XCOFB-eCard-Congratulations-Hero-v2-min.jpg',
+        },
+        {
+            id: '3443',
+            image: '../images/content/pagebuilder/210728-XCOFB-eCard-Birthday-Hero-v2-min.jpg',
+        },
+        {
+            id: '3444',
+            image: '../images/content/pagebuilder/211215-XCOFB-eCard-Sympathy-Hero-v2-min.jpg',
+        }
+    ]
+
+    document.querySelectorAll('.layout-choice-thumbnail-label').forEach(function (label) {
+        // Get eCard id
+        var layout = label.getAttribute('for').split('_')
+        layout = layout[layout.length - 1]
+        // Search for eCard in array
+        var found = optimizedThumbnails.find(eCard => eCard.id == layout)
+        // Replacing the image
+        label.children[0].setAttribute('src', found.image)
+    })
+
+    // Add event handlers
+    var previewButtonReady = setInterval(function () {
+        var previewButton = document.getElementById('eCard-preview')
+        if (previewButton) {
+
+            LO_eCardSelections.forEach(function (eCardSelection) {
+                eCardSelection.addEventListener('change', function () {
+                    LO_eCardSelections.forEach(function (selection) {
+                        selection.removeAttribute('checked')
+                    })
+                    eCardSelection.setAttribute('checked', 'checked')
+                })
+            })
+
+            previewButton.addEventListener('click', function () {
+                // Getting values from fields
+                var eCardImage = document.querySelector('.layout-choice-thumbnail-container input[checked="checked"]').previousElementSibling.children[0].getAttribute('src')
+                var eCardAlt = document.querySelector('.layout-choice-thumbnail-container input[checked="checked"]').previousElementSibling.children[0].getAttribute('alt')
+                var eCardFrom = LO_emailAddress.value
+                var eCardTo = LO_eCardRecipients.value
+                var eCardSubject = LO_eCardSubject.value
+                var eCardMessage = LO_eCardMessage.value
+
+                // Passing values to eCard layout
+                document.getElementById('eCard-from').textContent = eCardFrom
+                document.getElementById('eCard-to').textContent = eCardTo
+                document.getElementById('eCard-subject').textContent = eCardSubject
+                document.getElementById('eCard-image').setAttribute('src', eCardImage)
+                document.getElementById('eCard-image').setAttribute('alt', eCardAlt)
+                document.getElementById('eCard-message').textContent = eCardMessage
+
+                // Rendering modal
+                document.body.appendChild(document.getElementById('eCard-modal'))
+                document.getElementById('eCard-modal').classList.add('preview')
+            })
+
+            // Close preview
+            document.getElementById('eCard-modal-close').addEventListener('click', function () {
+                document.getElementById('eCard-modal').classList.remove('preview')
+            })
+            document.getElementById('eCard-modal').addEventListener('click', function () {
+                document.getElementById('eCard-modal').classList.remove('preview')
+            })
+
+            clearInterval(previewButtonReady)
+        }
+    }, 100)
+
+</script>
+<!-- eCard modal layout -->
+<div id="eCard-modal">
+    <span id="eCard-modal-close">&times;</span>
+    <div id="eCard-modal-container">
+        <div id="eCard-header">
+            <p>From: <span id="eCard-from"></span></p>
+            <p>To: <span id="eCard-to"></span></p>
+            <p>Subject: <span id="eCard-subject"></span></p>
+        </div>
+        <img src="" alt="" id="eCard-image">
+        <div id="eCard-content">
+            <p>Connecticut Foodshare has received a gift to help feed families across Connecticut who are experiencing
+                hunger.</p>
+            <p><strong><em id="eCard-message"></em></strong></p>
+            <p>Food is at the heart of a strong community.
+                When we end hunger, we create hope for our neighbors.
+                On behalf of the families who will benefit from this gift,
+                thank you for your generosity.</p>
+            </p>
+            <p><em>Every $1 donated helps to provide 2 meals for children, working parents, seniors, or people living
+                    with disabilities.</em></p>
+            <p><a href="https://www.ctfoodshare.org/" target="_blank">ctfoodshare.org</a></p>
+        </div>
+        <div id="eCard-footer">
+            <footer>
+                <a href="https://www.ctfoodshare.org/" target="_blank">
+                    <img src="../images/content/pagebuilder/RKD_09_Summer_eNews_eAppeal_1_Active_Email_1_Logo.png"
+                        alt="Connecticut Foodshare">
+                </a>
+                <p>
+                    <strong>
+                        ©2022 Connecticut Foodshare
+                    </strong>
+                </p>
+                <address>
+                    2 Research Parkway, Wallingford, CT 06492
+                    <br>
+                    203.469.5000
+                </address>
+                <div id="social-media-container">
+                    <a href="https://twitter.com/CTFoodshare" class="social-media-icon" id="twitter"
+                        target="_blank"></a>
+                    <a href="https://www.instagram.com/ctfoodshare/?hl=en" class="social-media-icon" id="instagram"
+                        target="_blank"></a>
+                    <a href="https://www.facebook.com/CTFoodshare/" class="social-media-icon" id="facebook"
+                        target="_blank"></a>
+                    <a href="https://www.youtube.com/ctfoodbankevents" class="social-media-icon" id="youtube"
+                        target="_blank"></a>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
+<style>
+    #eCard-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(18px);
+        display: none;
+        overflow: auto;
+    }
+
+    #eCard-modal.preview {
+        display: block;
+    }
+
+    #eCard-modal-close {
+        color: white;
+        font-size: 60px;
+        font-weight: 700;
+        display: block;
+        text-align: center;
+        margin: 0 0.5em 0 0;
+        float: right;
+        cursor: pointer;
+    }
+
+    #eCard-modal-container {
+        background-color: var(--lighter-gray);
+        clear: both;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    #eCard-modal-container p,
+    #eCard-modal-container a,
+    #eCard-modal-container strong,
+    #eCard-modal-container em,
+    #eCard-modal-container span,
+    #eCard-modal-container address {
+        font-family: Arial, Helvetica, sans-serif
+    }
+
+    #eCard-header {
+        padding: 4px;
+        background-color: white;
+    }
+
+    #eCard-image {
+        display: block;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    #eCard-content {
+        display: block;
+        max-width: 600px;
+        margin: 0 auto;
+        border-bottom: 4px solid var(--blue);
+        background-color: white;
+        text-align: center;
+        padding: 2em 1em;
+    }
+
+    #eCard-content p {
+        margin-bottom: 0.25em;
+        font-weight: 100;
+    }
+
+    #eCard-content p a {
+        color: var(--green);
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    #eCard-footer {
+        display: block;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    #eCard-footer footer {
+        padding: 10px;
+    }
+
+    #eCard-footer footer p,
+    footer address {
+        margin-top: 0.25em;
+    }
+
+    #eCard-footer footer #social-media-container {
+        margin-top: 1em;
+    }
+</style>

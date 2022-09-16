@@ -1,0 +1,621 @@
+<script>
+    // TOOLS
+    // Triggers the "change" event
+    var changeEvent = new CustomEvent('change')
+
+    // Search for URL parameter & value
+    var urlParams = new URLSearchParams(window.location.search)
+
+    // Returns the key code, fix implemented for mobile devices input fields
+    var getKeyCode = function (str) {
+        return str.charCodeAt(str.length - 1)
+    }
+
+    // Separate thousands with commas
+    function commaSeparated(num) {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+    }
+
+    // Stores item in session
+    function storeInSession(name, value) {
+        sessionStorage.setItem(client + '-' + form + '-' + name, value)
+    }
+
+    // Retrieves item from session
+    function retrieveFromSession(name) {
+        return sessionStorage.getItem(client + '-' + form + '-' + name)
+    }
+
+    // Updates the process button's text
+    function updateButtonText(amount) {
+        var extraText = MONTHLY ? ' monthly' : ''
+        LO_processButton.textContent = ('Donate $' + commaSeparated(amount) + extraText)
+    }
+
+    // Key codes for numeric inputs
+    var accepted = [8, 37, 39, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 110, 190]
+
+    // IDENTIFIERS
+    var client = 'XCOFB'
+    var form = '[[S120:dc:donFormId]]'
+
+    // GLOBAL VALUES
+    var CHOSEN
+    var MONTHLY
+    var FEES_COVERED
+    var TRIBUTE_CHECKED
+    var ONE_TIME_AMOUNTS
+    var MONTHLY_AMOUNTS
+
+    // Luminate Online Native Fields
+    var LO_amount
+    var LO_monthly
+    var LO_cardNumber
+    var LO_cardExpMonth
+    var LO_cardExpYear
+    var LO_cardCVV
+    var LO_bankRouting
+    var LO_bankAccount
+    var LO_bankAccountVerify
+    var LO_bankAccountType
+    var LO_feeOption
+    var LO_feeValue
+    var LO_companyGift
+    var LO_companyName
+    var LO_billingTitle
+    var LO_billingFirst
+    var LO_billingLast
+    var LO_billingStreet1
+    var LO_billingCity
+    var LO_billingState
+    var LO_billingZip
+    var LO_emailAddress
+    var LO_phoneNumber
+    var LO_tribute
+    var LO_tributeType
+    var LO_tributeFirst
+    var LO_tributeLast
+    var LO_eCard
+    var LO_eCardSelections
+    var LO_eCardRecipients
+    var LO_eCardSubject
+    var LO_eCardMessage
+    var LO_processButton
+
+
+    // RKD Custom fields, inputs and controls
+    var RKD_customAmountButtons
+    var RKD_customOtherAmount
+    var RKD_customFrequencyRadios
+
+
+
+    // RKD Custom fields    
+    function RKD_setNativeFields() {
+        /**
+        ** DEFINE INPUTS
+        **/
+        // Gift inputs
+        LO_amount = document.getElementById('level_standardname')
+        LO_monthly = document.getElementById('level_standardauto_repeatname')
+        // Credit Card inputs
+        LO_cardNumber = document.getElementById('responsive_payment_typecc_numbername')
+        LO_cardExpMonth = document.getElementById('responsive_payment_typecc_exp_date_MONTH')
+        LO_cardExpYear = document.getElementById('responsive_payment_typecc_exp_date_YEAR')
+        LO_cardCVV = document.getElementById('responsive_payment_typecc_cvvname')
+        // Bank account inputs
+        LO_bankRouting = document.getElementById('responsive_payment_typerouting_numbername')
+        LO_bankAccount = document.getElementById('responsive_payment_typebank_accountname')
+        LO_bankAccountVerify = document.getElementById('responsive_payment_typeverify_bank_accountname')
+        LO_bankAccountType = document.querySelectorAll('input[name="responsive_payment_type.account_type"]')
+        // Cover the fees inputs
+        LO_feeOption = document.getElementById('cover_fee_option_radio')
+        LO_feeValue = document.getElementById('cover_fee_value_input')
+        // Company gift inputs
+        LO_companyGift = document.getElementById('is_company_gift_radio')
+        LO_companyName = document.getElementById('company_organization_name_input')
+        // Billing inputs
+        LO_billingTitle = document.getElementById('billing_title')
+        LO_billingFirst = document.getElementById('billing_first_namename')
+        LO_billingLast = document.getElementById('billing_last_namename')
+        LO_billingStreet1 = document.getElementById('billing_addr_street1name')
+        LO_billingCity = document.getElementById('billing_addr_cityname')
+        LO_billingState = document.getElementById('billing_addr_state')
+        LO_billingZip = document.getElementById('billing_addr_zipname')
+        LO_emailAddress = document.getElementById('donor_email_addressname')
+        LO_phoneNumber = document.getElementById('donor_phonename')
+        //  Tribute inputs
+        LO_tribute = document.getElementById('tribute_show_honor_fieldsname')
+        LO_tributeType = document.getElementById('tribute_type')
+        LO_tributeFirst = document.getElementById('tribute_honoree_first_namename')
+        LO_tributeLast = document.getElementById('tribute_honoree_last_namename')
+        // eCard inputs
+        LO_eCard = document.getElementById('send_ecardname')
+        LO_eCardSelections = document.querySelectorAll('input[name="stationery_layout_id"]')
+        LO_eCardRecipients = document.getElementById('ecard_recpientsname')
+        LO_eCardSubject = document.getElementById('tribute_ecard_subjectname')
+        LO_eCardMessage = document.getElementById('tribute_ecard_messagename')
+        // Button
+        LO_processButton = document.getElementById('pstep_finish')
+
+        RKD_formatGiftAmount()
+    }
+
+
+    function RKD_formatGiftAmount() {
+        // Add class identifier to debug fields
+        document.querySelector('.don-standard-levels.form-row').classList.add('luminate-field')
+        document.querySelector('.donation-level-container-generic-repeat.form-input').classList.add('luminate-field')
+
+        // Format next section
+        RKD_formatPaymentInfo()
+    }
+
+    function RKD_formatPaymentInfo() {
+        // Move payment options to containers
+        document.getElementById('credit').appendChild(document.getElementById('responsive_payment_typepay_typeradiocredit').parentElement)
+        document.getElementById('bank').appendChild(document.getElementById('responsive_payment_typepay_typeradioach').parentElement)
+        document.getElementById('paypal').appendChild(document.getElementById('responsive_payment_typepay_typeradiopaypal').parentElement)
+        // Adding placeholder image to payment buttons
+        var blankImage = document.createElement('img')
+        blankImage.setAttribute('src', '../images/content/pagebuilder/blank_space.png')
+        document.querySelector('label[for="responsive_payment_typepay_typeradiocredit"]').innerHTML = ''
+        document.querySelector('label[for="responsive_payment_typepay_typeradiocredit"]').appendChild(blankImage.cloneNode(true))
+        document.querySelector('label[for="responsive_payment_typepay_typeradioach"]').innerHTML = ''
+        document.querySelector('label[for="responsive_payment_typepay_typeradioach"]').appendChild(blankImage.cloneNode(true))
+        document.querySelector('label[for="responsive_payment_typepay_typeradiopaypal"]').innerHTML = ''
+        document.querySelector('label[for="responsive_payment_typepay_typeradiopaypal"]').appendChild(blankImage.cloneNode(true))
+        // Remove unnecesary elements
+        document.querySelector('label[for="cover_fee_option_dropdown"]').parentElement.remove()
+        document.querySelector('label[for="is_company_gift_dropdown"]').parentElement.remove()
+        document.querySelector('.payment-type-selection-container.payment-field-container h3').remove()
+        document.querySelector('#payment_cc_container h3').remove()
+        document.querySelector('#responsive_payment_typecc_type_row').remove()
+        document.querySelector('.payment-type-selection-container.payment-field-container').remove()
+        document.querySelector('#payment_bank_container h3').remove()
+        // Add class identifier to debug fields
+        LO_feeValue.parentElement.parentElement.classList.add('luminate-field')
+        // Set necessary attributes
+        LO_cardNumber.setAttribute('maxlength', 16)
+        LO_cardNumber.required = true
+        LO_cardCVV.setAttribute('maxlength', 4)
+        LO_cardCVV.required = true
+        LO_bankAccount.setAttribute('maxlength', 20)
+        LO_bankAccountVerify.setAttribute('maxlength', 20)
+        LO_bankRouting.setAttribute('maxlength', 20)
+
+        LO_companyName.parentElement.parentElement.id = 'company_name_row'
+
+        // Adding handlers for events
+        LO_cardNumber.addEventListener('input', function () {
+            var invalidKeysRegex = /[^0-9]/g;
+            this.value = this.value.replace(invalidKeysRegex, '');
+        })
+
+        LO_cardCVV.addEventListener('input', function () {
+            var invalidKeysRegex = /[^0-9]/g;
+            this.value = this.value.replace(invalidKeysRegex, '');
+        })
+
+        LO_companyGift.addEventListener('change', function () {
+            this.checked ? LO_companyName.parentElement.parentElement.style.display = 'block' : LO_companyName.parentElement.parentElement.style.display = 'none'
+            storeInSession('company-gift', this.checked)
+        })
+
+        // Format next section
+        RKD_formatBillingDetails()
+    }
+
+    function RKD_formatBillingDetails() {
+        // Set necessary attributes
+        LO_billingFirst.required = true
+        LO_billingLast.required = true
+        LO_billingStreet1.required = true
+        LO_billingCity.required = true
+        LO_billingState.required = true
+        LO_billingZip.required = true
+        LO_emailAddress.required = true
+        LO_emailAddress.setAttribute('type', 'email')
+
+        // Wrap fields
+        var billingContainer = document.getElementById('billing-details')
+        billingContainer.appendChild(document.getElementById('billing_title_row'))
+        billingContainer.appendChild(document.getElementById('billing_first_name_row'))
+        billingContainer.appendChild(document.getElementById('billing_last_name_row'))
+        billingContainer.appendChild(document.getElementById('billing_addr_street1_row'))
+        billingContainer.appendChild(document.getElementById('billing_addr_city_row'))
+        billingContainer.appendChild(document.getElementById('billing_addr_state_row'))
+        billingContainer.appendChild(document.getElementById('billing_addr_zip_row'))
+        billingContainer.appendChild(document.getElementById('donor_email_address_row'))
+        billingContainer.appendChild(document.getElementById('donor_phone_row'))
+
+        // Add required attributes
+
+        // Add handlers
+        LO_phoneNumber.addEventListener('focus', function () {
+            LO_phoneNumber.setAttribute('placeholder', '(___) ___-____')
+        })
+
+        LO_phoneNumber.addEventListener('blur', function () {
+            LO_phoneNumber.setAttribute('placeholder', 'Phone Number')
+        })
+
+        LO_phoneNumber.addEventListener('input', function (e) {
+            var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        })
+
+        // Format next section
+        RKD_formatTribute()
+    }
+
+    function RKD_formatTribute() {
+        // Remove unnecesary elements
+        LO_eCard.previousElementSibling.remove()
+
+        // Wrap the eCard elements
+        var eCardContainer = document.getElementById('eCards')
+        var eCardPreview = document.createElement('span')
+        eCardPreview.id = 'eCard-preview'
+        eCardPreview.textContent = 'ECARD PREVIEW'
+        eCardContainer.appendChild(document.getElementById('select_grid_row'))
+        eCardContainer.appendChild(document.getElementById('ecard_recpients_row'))
+        eCardContainer.appendChild(document.getElementById('tribute_ecard_subject_row'))
+        eCardContainer.appendChild(document.getElementById('tribute_ecard_message_row'))
+        eCardContainer.appendChild(eCardPreview)
+
+        // Wrap the tribute elements
+        var tributeContainer = document.getElementById('tributeGift')
+        tributeContainer.appendChild(document.getElementById('tribute_type_row'))
+        tributeContainer.appendChild(document.getElementById('tribute_honoree_first_name_row'))
+        tributeContainer.appendChild(document.getElementById('tribute_honoree_last_name_row'))
+        tributeContainer.appendChild(document.getElementById('send_ecard_row'))
+        tributeContainer.appendChild(eCardContainer)
+
+        // Add event handlers
+        LO_tribute.addEventListener('change', function () {
+            TRIBUTE_CHECKED = this.checked
+            this.checked ? document.getElementById('send_ecard_row').style.display = 'block' : document.getElementById('send_ecard_row').style.display = 'none'
+            storeInSession('tribute', TRIBUTE_CHECKED)
+        })
+
+        LO_eCard.addEventListener('change', function () {
+            this.checked ? eCardContainer.style.display = 'block' : eCardContainer.style.display = 'none'
+            storeInSession('eCard', this.checked)
+        })
+
+        // All sections are formatted, define array
+        RKD_defineGiftArray()
+    }
+
+    function RKD_defineGiftArray() {
+        // Fetch amounts from config file        
+        ONE_TIME_AMOUNTS = formConfig.oneTimeArray
+        MONTHLY_AMOUNTS = formConfig.monthlyArray
+
+        RKD_renderGiftArray()
+    }
+
+    function RKD_renderGiftArray() {
+        ONE_TIME_AMOUNTS.forEach(function (amount, index) {
+            var button = document.createElement('div')
+            button.classList.add('gift-array-button')
+            button.setAttribute('data-amount', amount)
+            button.textContent = '$' + commaSeparated(amount)
+            document.querySelector('#one-time-array').appendChild(button)
+        })
+
+        MONTHLY_AMOUNTS.forEach(function (amount, index) {
+            var button = document.createElement('div')
+            button.classList.add('gift-array-button')
+            button.setAttribute('data-amount', amount)
+            button.textContent = '$' + commaSeparated(amount)
+            document.querySelector('#monthly-array').appendChild(button)
+        })
+
+        RKD_addFormListeners()
+    }
+
+    function RKD_addFormListeners() {
+
+        // Defining custom controls
+        RKD_customAmountButtons = document.querySelectorAll('.gift-array-button')
+        RKD_customOtherAmount = document.getElementById('other-amount')
+        RKD_customFrequencyRadios = document.querySelectorAll('input[name="frequency"]')
+
+        // Gift array click handler
+        RKD_customAmountButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Remove the "chosen" class
+                RKD_customOtherAmount.classList.remove('chosen')
+                RKD_customAmountButtons.forEach(function (element) {
+                    element.classList.remove('chosen')
+                })
+                // Add the "chosen" class to clicked element
+                button.classList.add('chosen')
+                // Reset "Other amount"
+                RKD_customOtherAmount.value = ''
+                // Update the amount 
+                RKD_updateGiftAmount(button.getAttribute('data-amount'))
+            })
+        })
+
+        // Other amount input handlers
+        RKD_customOtherAmount.addEventListener('focus', function () {
+            // Reset amount
+            CHOSEN = 0
+            // Remove the "chosen" class            
+            RKD_customAmountButtons.forEach(function (element) {
+                element.classList.remove('chosen')
+            })
+            // Add the "chosen" class to clicked element
+            RKD_customOtherAmount.classList.add('chosen')
+            // Update the amount
+            RKD_updateGiftAmount(CHOSEN)
+        })
+
+        RKD_customOtherAmount.addEventListener('blur', function (e) {
+            var amount = this.value
+            e = e || window.event
+            var decimal = amount.split('.')
+            var charCode = e.keyCode || e.which
+            if (charCode == 0 || charCode == 229) {
+                charCode = getKeyCode(this.value)
+            }
+
+            if (e.ctrlKey || e.shiftKey || (decimal.length > 1 && (charCode === 110 || charCode === 190)) || !accepted.includes(charCode)) {
+                e.preventDefault()
+            } else {
+                setTimeout(function () {
+                    var curValue = RKD_customOtherAmount.value
+                    var amt = curValue
+                    RKD_updateGiftAmount(amt)
+                }, 50)
+            }
+        })
+
+        RKD_customOtherAmount.addEventListener('input', function (e) {
+            var amount = this.value
+            e = e || window.event
+            var decimal = amount.split('.')
+            var charCode = e.keyCode || e.which
+            if (charCode == 0 || charCode == 229) {
+                charCode = getKeyCode(this.value)
+            }
+
+            if (e.ctrlKey || e.shiftKey || (decimal.length > 1 && (charCode === 110 || charCode === 190)) || !accepted.includes(charCode)) {
+                e.preventDefault()
+            } else {
+                setTimeout(function () {
+                    var curValue = RKD_customOtherAmount.value
+                    var amt = curValue
+                    RKD_updateGiftAmount(amt)
+                }, 50)
+            }
+        })
+
+        RKD_customOtherAmount.addEventListener('keydown', function (e) {
+            var amount = this.value
+            e = e || window.event
+            var decimal = amount.split('.')
+            var charCode = e.keyCode || e.which
+            if (charCode == 0 || charCode == 229) {
+                charCode = getKeyCode(this.value)
+            }
+
+            if (e.ctrlKey || e.shiftKey || (decimal.length > 1 && (charCode === 110 || charCode === 190)) || !accepted.includes(charCode)) {
+                e.preventDefault()
+            } else {
+                setTimeout(function () {
+                    var curValue = RKD_customOtherAmount.value
+                    var amt = curValue
+                    RKD_updateGiftAmount(amt)
+                }, 50)
+            }
+        })
+
+        RKD_customOtherAmount.addEventListener('change', function (e) {
+            var amount = this.value
+            e = e || window.event
+            var decimal = amount.split('.')
+            var charCode = e.keyCode || e.which
+            if (charCode == 0 || charCode == 229) {
+                charCode = getKeyCode(this.value)
+            }
+
+            if (e.ctrlKey || e.shiftKey || (decimal.length > 1 && (charCode === 110 || charCode === 190)) || !accepted.includes(charCode)) {
+                e.preventDefault()
+            } else {
+                setTimeout(function () {
+                    var curValue = RKD_customOtherAmount.value
+                    var amt = curValue
+                    RKD_updateGiftAmount(amt)
+                }, 50)
+            }
+        })
+
+        // Frequency selector handlers        
+        RKD_customFrequencyRadios.forEach(function (radio) {
+            radio.addEventListener('click', function () {
+                if (radio.id == 'one-time') {
+                    MONTHLY = false
+                    document.getElementById('one-time-array').style.display = 'flex'
+                    document.getElementById('monthly-array').style.display = 'none'
+                    document.querySelector('#one-time-array > div[data-amount="' + formConfig.defaultOneTime + '"]').click()
+                } else if (radio.id == 'monthly') {
+                    MONTHLY = true
+                    document.getElementById('monthly-array').style.display = 'flex'
+                    document.getElementById('one-time-array').style.display = 'none'
+                    document.querySelector('#monthly-array > div[data-amount="' + formConfig.defaultMonthly + '"]').click()
+                }
+                // Triggering hidden field
+                LO_monthly.checked = MONTHLY
+                LO_monthly.dispatchEvent(changeEvent)
+                // Storing in session
+                storeInSession('monthly', MONTHLY)
+            })
+
+        })
+
+        // Cover the fees handler
+        LO_feeOption.addEventListener('change', function () {
+            FEES_COVERED = this.checked
+            storeInSession('fees', FEES_COVERED)
+            RKD_updateGiftAmount(CHOSEN)
+        })
+
+        RKD_setInitialValues()
+    }
+
+    function RKD_setInitialValues() {
+        // Retrieving session stored items in case of an error
+        var previousAmount = retrieveFromSession('chosen')
+        var hadMonthly = retrieveFromSession('monthly')
+        var hadTribute = retrieveFromSession('tribute')
+        var hadFees = retrieveFromSession('fees')
+        var wasCompanyGift = retrieveFromSession('company-gift')
+        var hadeCard = retrieveFromSession('eCard')
+
+        // Check for frequency
+        if (urlParams.has('monthly')) {
+            if (urlParams.get('monthly') == 'on') {
+                document.getElementById('monthly').click()
+            } else {
+                document.getElementById('one-time').click()
+            }
+        } else if (hadMonthly != null) {
+            hadMonthly == 'true' ? document.getElementById('monthly').click() : document.getElementById('one-time').click()
+        } else if (formConfig.defaultRecurring == true) {
+            document.getElementById('monthly').click()
+        } else {
+            document.getElementById('one-time').click()
+        }
+
+        // Check for amount       
+        var amount
+        var button
+        if (urlParams.has('chosen')) {
+            amount = urlParams.get('chosen')
+            if (isNaN(amount)) {
+                // Check the frequency
+                MONTHLY == true ? amount = formConfig.defaultMonthly : amount = formConfig.defaultOneTime
+            }
+        } else if (previousAmount != null) {
+            amount = previousAmount
+        } else {
+            MONTHLY == true ? amount = formConfig.defaultMonthly : amount = formConfig.defaultOneTime
+        }
+
+        if (MONTHLY) {
+            // Search for button          
+            button = document.querySelector('#monthly-array > div[data-amount="' + amount + '"]')
+            if (button) {
+                button.click()
+            } else {
+                RKD_customOtherAmount.focus()
+                RKD_customOtherAmount.value = amount
+                RKD_customOtherAmount.blur()
+            }
+        } else {
+            // Search for button          
+            button = document.querySelector('#one-time-array > div[data-amount="' + amount + '"]')
+            if (button) {
+                button.click()
+            } else {
+                RKD_customOtherAmount.focus()
+                RKD_customOtherAmount.value = amount
+                RKD_customOtherAmount.blur()
+            }
+        }
+
+        // Check for fees
+        if (hadFees != null) {
+            hadFees == 'true' ? FEES_COVERED = true : FEES_COVERED = false
+        } else {
+            FEES_COVERED = true
+        }
+        LO_feeOption.checked = FEES_COVERED
+        LO_feeOption.dispatchEvent(changeEvent)
+
+
+        // Check for company gift
+        if (wasCompanyGift != null) {
+            wasCompanyGift == 'true' ? LO_companyGift.checked = true : LO_companyGift.checked = false
+            LO_companyGift.dispatchEvent(changeEvent)
+        }
+
+        // Check for tribute
+        if (urlParams.has('tribute')) {
+            if (urlParams.get('tribute') == 'on') {
+                TRIBUTE_CHECKED = true
+            }
+            else {
+                TRIBUTE_CHECKED = false
+            }
+        } else if (hadTribute != null) {
+            hadTribute == 'true' ? TRIBUTE_CHECKED = true : TRIBUTE_CHECKED = false
+        } else {
+            TRIBUTE_CHECKED = false
+        }
+        LO_tribute.checked = TRIBUTE_CHECKED
+        LO_tribute.dispatchEvent(changeEvent)
+
+        // Check for eCard
+        if (hadeCard != null) {
+            hadeCard == 'true' ? LO_eCard.checked = true : LO_eCard.checked = false
+            LO_eCard.dispatchEvent(changeEvent)
+        }
+
+        // Check for debug
+        if (urlParams.has('debug')) {
+            document.querySelectorAll('.luminate-field').forEach(function (element) { element.classList.add('debug') })
+        }
+    }
+
+    function RKD_updateGiftAmount(amount) {
+
+        amount = Number(amount)
+        CHOSEN = amount
+        var calculatedAmount = 0
+        var calculatedFee = Number((amount * formConfig.feePercentage) / 100)
+        if (FEES_COVERED) {
+            LO_feeValue.value = calculatedFee.toFixed(2)
+            calculatedAmount = amount + calculatedFee
+        } else {
+            calculatedAmount = CHOSEN
+            LO_feeValue.value = 0
+        }
+
+        if (calculatedAmount < formConfig.minAmount) {
+            document.getElementById('gift-amount-message').textContent = ('The minimum donation amount is $' + formConfig.minAmount)
+            LO_processButton.disabled = true
+        } else {
+            document.getElementById('gift-amount-message').textContent = ''
+            LO_processButton.disabled = false
+        }
+
+        LO_amount.value = calculatedAmount.toFixed(2)
+        updateButtonText(commaSeparated(calculatedAmount.toFixed(2)))
+        storeInSession('chosen', CHOSEN)
+    }
+
+    function RKD_initForm() {
+        // Check for page
+        if (urlParams.get(form + '.donation') === 'form1') {
+            // Form loads normally
+            RKD_setNativeFields()
+        } else if (urlParams.get(form + '.donation') === 'completed') {
+            console.log('Thank you page rendered')
+            // Thank you page is rendered
+            return
+        } else {
+            renderCreative()
+            // Form reloaded after an error
+            RKD_setNativeFields()
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', function () {
+        RKD_initForm()
+    })
+</script>
