@@ -144,58 +144,59 @@
 
     function RKD_formatGiftAmount() {
         // Add class identifier to debug fields
-        document.querySelector('.don-standard-levels.form-row').classList.add('luminate-field')
-        document.querySelector('.donation-level-container-generic-repeat.form-input').classList.add('luminate-field')
+        document.querySelector('.don-standard-levels.form-row').classList.add('RKD-luminate-field')
+        document.querySelector('.donation-level-container-generic-repeat.form-input').classList.add('RKD-luminate-field')
 
-        // Format next section
+        // Format next section        
         RKD_formatPaymentInfo()
     }
 
     function RKD_formatPaymentInfo() {
         // Move payment options to containers
         document.getElementById('credit').appendChild(document.getElementById('responsive_payment_typepay_typeradiocredit').parentElement)
-        document.getElementById('bank').appendChild(document.getElementById('responsive_payment_typepay_typeradioach').parentElement)
-        document.getElementById('paypal').appendChild(document.getElementById('responsive_payment_typepay_typeradiopaypal').parentElement)
+
+        if (document.getElementById('responsive_payment_typepay_typeradioach')) {
+            document.getElementById('bank').appendChild(document.getElementById('responsive_payment_typepay_typeradioach').parentElement)
+        }
+
+        if (document.getElementById('responsive_payment_typepay_typeradiopaypal')) {
+            document.getElementById('paypal').appendChild(document.getElementById('responsive_payment_typepay_typeradiopaypal').parentElement)
+        }
+
         // Adding placeholder image to payment buttons
         var blankImage = document.createElement('img')
         blankImage.setAttribute('src', '../images/content/pagebuilder/blank_space.png')
         document.querySelector('label[for="responsive_payment_typepay_typeradiocredit"]').innerHTML = ''
         document.querySelector('label[for="responsive_payment_typepay_typeradiocredit"]').appendChild(blankImage.cloneNode(true))
-        document.querySelector('label[for="responsive_payment_typepay_typeradioach"]').innerHTML = ''
-        document.querySelector('label[for="responsive_payment_typepay_typeradioach"]').appendChild(blankImage.cloneNode(true))
+        if (document.getElementById('responsive_payment_typepay_typeradioach')) {
+            document.querySelector('label[for="responsive_payment_typepay_typeradioach"]').innerHTML = ''
+            document.querySelector('label[for="responsive_payment_typepay_typeradioach"]').appendChild(blankImage.cloneNode(true))
+            document.querySelector('#payment_bank_container h3').style.display = 'none'
+        }
+
         document.querySelector('label[for="responsive_payment_typepay_typeradiopaypal"]').innerHTML = ''
         document.querySelector('label[for="responsive_payment_typepay_typeradiopaypal"]').appendChild(blankImage.cloneNode(true))
         // Remove unnecesary elements
-        document.querySelector('label[for="cover_fee_option_dropdown"]').parentElement.remove()
-        document.querySelector('label[for="is_company_gift_dropdown"]').parentElement.remove()
-        document.querySelector('.payment-type-selection-container.payment-field-container h3').remove()
-        document.querySelector('#payment_cc_container h3').remove()
-        document.querySelector('#responsive_payment_typecc_type_row').remove()
-        document.querySelector('.payment-type-selection-container.payment-field-container').remove()
-        document.querySelector('#payment_bank_container h3').remove()
+        document.querySelector('label[for="cover_fee_option_dropdown"]').parentElement.style.display = 'none'
+        document.querySelector('label[for="is_company_gift_dropdown"]').parentElement.style.display = 'none'
+        document.querySelector('.payment-type-selection-container.payment-field-container h3').style.display = 'none'
+        document.querySelector('#payment_cc_container h3').style.display = 'none'
+        document.querySelector('#responsive_payment_typecc_type_row').style.display = 'none'
+        document.querySelector('.payment-type-selection-container.payment-field-container').style.display = 'none'
+
         // Add class identifier to debug fields
-        LO_feeValue.parentElement.parentElement.classList.add('luminate-field')
+        LO_feeValue.parentElement.parentElement.classList.add('RKD-luminate-field')
         // Set necessary attributes
         LO_cardNumber.setAttribute('maxlength', 16)
-        LO_cardNumber.required = true
         LO_cardCVV.setAttribute('maxlength', 4)
-        LO_cardCVV.required = true
-        LO_bankAccount.setAttribute('maxlength', 20)
-        LO_bankAccountVerify.setAttribute('maxlength', 20)
-        LO_bankRouting.setAttribute('maxlength', 20)
+        if (document.getElementById('responsive_payment_typepay_typeradioach')) {
+            LO_bankAccount.setAttribute('maxlength', 20)
+            LO_bankAccountVerify.setAttribute('maxlength', 20)
+            LO_bankRouting.setAttribute('maxlength', 20)
+        }
+
 
         LO_companyName.parentElement.parentElement.id = 'company_name_row'
-
-        // Adding handlers for events
-        LO_cardNumber.addEventListener('input', function () {
-            var invalidKeysRegex = /[^0-9]/g;
-            this.value = this.value.replace(invalidKeysRegex, '');
-        })
-
-        LO_cardCVV.addEventListener('input', function () {
-            var invalidKeysRegex = /[^0-9]/g;
-            this.value = this.value.replace(invalidKeysRegex, '');
-        })
 
         LO_companyGift.addEventListener('change', function () {
             this.checked ? LO_companyName.parentElement.parentElement.style.display = 'block' : LO_companyName.parentElement.parentElement.style.display = 'none'
@@ -277,6 +278,15 @@
             TRIBUTE_CHECKED = this.checked
             this.checked ? document.getElementById('send_ecard_row').style.display = 'block' : document.getElementById('send_ecard_row').style.display = 'none'
             storeInSession('tribute', TRIBUTE_CHECKED)
+            if (this.checked == false) {
+                LO_eCard.checked = false
+                try {
+                    LO_eCard.dispatchEvent(changeEvent)
+                } catch (error) {
+
+                }
+
+            }
         })
 
         LO_eCard.addEventListener('change', function () {
@@ -299,7 +309,7 @@
     function RKD_renderGiftArray() {
         ONE_TIME_AMOUNTS.forEach(function (amount, index) {
             var button = document.createElement('div')
-            button.classList.add('gift-array-button')
+            button.classList.add('RKD-gift-array-button')
             button.setAttribute('data-amount', amount)
             button.textContent = '$' + commaSeparated(amount)
             document.querySelector('#one-time-array').appendChild(button)
@@ -307,7 +317,7 @@
 
         MONTHLY_AMOUNTS.forEach(function (amount, index) {
             var button = document.createElement('div')
-            button.classList.add('gift-array-button')
+            button.classList.add('RKD-gift-array-button')
             button.setAttribute('data-amount', amount)
             button.textContent = '$' + commaSeparated(amount)
             document.querySelector('#monthly-array').appendChild(button)
@@ -319,7 +329,7 @@
     function RKD_addFormListeners() {
 
         // Defining custom controls
-        RKD_customAmountButtons = document.querySelectorAll('.gift-array-button')
+        RKD_customAmountButtons = document.querySelectorAll('.RKD-gift-array-button')
         RKD_customOtherAmount = document.getElementById('other-amount')
         RKD_customFrequencyRadios = document.querySelectorAll('input[name="frequency"]')
 
@@ -327,12 +337,12 @@
         RKD_customAmountButtons.forEach(function (button) {
             button.addEventListener('click', function () {
                 // Remove the "chosen" class
-                RKD_customOtherAmount.classList.remove('chosen')
+                RKD_customOtherAmount.classList.remove('RKD-chosen')
                 RKD_customAmountButtons.forEach(function (element) {
-                    element.classList.remove('chosen')
+                    element.classList.remove('RKD-chosen')
                 })
                 // Add the "chosen" class to clicked element
-                button.classList.add('chosen')
+                button.classList.add('RKD-chosen')
                 // Reset "Other amount"
                 RKD_customOtherAmount.value = ''
                 // Update the amount 
@@ -346,10 +356,10 @@
             CHOSEN = 0
             // Remove the "chosen" class            
             RKD_customAmountButtons.forEach(function (element) {
-                element.classList.remove('chosen')
+                element.classList.remove('RKD-chosen')
             })
             // Add the "chosen" class to clicked element
-            RKD_customOtherAmount.classList.add('chosen')
+            RKD_customOtherAmount.classList.add('RKD-chosen')
             // Update the amount
             RKD_updateGiftAmount(CHOSEN)
         })
@@ -568,7 +578,7 @@
 
         // Check for debug
         if (urlParams.has('debug')) {
-            document.querySelectorAll('.luminate-field').forEach(function (element) { element.classList.add('debug') })
+            document.querySelectorAll('.RKD-luminate-field').forEach(function (element) { element.classList.add('RKD-debug') })
         }
     }
 

@@ -188,7 +188,7 @@
     }
 
     /* HELPERS */
-    .luminate-field {
+    .RKD-luminate-field {
         display: none !important;
         text-transform: capitalize;
         font-weight: 700;
@@ -197,7 +197,7 @@
         padding: 0.5em;
     }
 
-    .luminate-field.debug {
+    .RKD-luminate-field.RKD-debug {
         display: block !important;
     }
 
@@ -249,7 +249,7 @@
         flex-wrap: nowrap;
     }
 
-    .gift-array-button {
+    .RKD-gift-array-button {
         width: 100%;
         color: var(--dark-gray);
         font-size: 24px;
@@ -263,8 +263,8 @@
         cursor: pointer;
     }
 
-    .gift-array-button:hover,
-    .gift-array-button.chosen {
+    .RKD-gift-array-button:hover,
+    .RKD-gift-array-button.RKD-chosen {
         color: white;
         background-color: var(--green);
     }
@@ -619,7 +619,7 @@
 
         /* ARRAY */
         #gift-array {
-            grid-template-columns: 1fr
+            display: block;
         }
 
         #one-time-array,
@@ -627,9 +627,13 @@
             flex-direction: column;
         }
 
-        .gift-array-button {
+        .RKD-gift-array-button {
             margin-right: 0;
             margin-bottom: 0.5em;
+        }
+
+        #gift-amount-message {
+            text-align: center;
         }
 
         /* PAYMENT */
